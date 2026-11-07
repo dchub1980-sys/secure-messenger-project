@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>Мессенджер — прототип</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/js/chat.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="Список чатов">
+        <a class="brand" href="/" aria-label="Мессенджер, главная">
+          <span class="brand-mark" aria-hidden="true">м</span>
+          <span>мессенджер</span>
+        </a>
+
+        <div class="sidebar-heading">
+          <h1>Сообщения</h1>
+          <button class="icon-button" type="button" aria-label="Создать чат" title="Создать чат">＋</button>
+        </div>
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input type="search" placeholder="Поиск" aria-label="Поиск по чатам">
+        </label>
+
+        <button class="chat-preview active" type="button" aria-current="page">
+          <span class="avatar avatar-blue" aria-hidden="true">РГ</span>
+          <span class="chat-preview-copy">
+            <span class="chat-preview-top"><strong>Рабочая группа</strong><time>10:41</time></span>
+            <span class="chat-preview-bottom"><span>Общий тестовый чат</span><span class="unread-dot" aria-label="Непрочитанное"></span></span>
+          </span>
+        </button>
+        <p class="sidebar-note">Откройте чат во второй вкладке, чтобы проверить обмен сообщениями.</p>
+
+        <div class="profile">
+          <span class="avatar avatar-violet" id="user-avatar" aria-hidden="true">Г</span>
+          <span><strong id="current-username">Гость</strong><small>Участник чата</small></span>
+          <button class="icon-button profile-menu" type="button" aria-label="Настройки профиля">···</button>
+        </div>
+      </aside>
+
+      <section class="conversation" aria-label="Переписка Рабочая группа">
+        <header class="conversation-header">
+          <div class="conversation-person">
+            <span class="avatar avatar-blue" aria-hidden="true">РГ</span>
+            <div><h2>Рабочая группа</h2><p><span class="status-dot" id="connection-dot"></span><span id="connection-status">Подключение…</span></p></div>
+          </div>
+          <span class="demo-label">WebSocket</span>
+        </header>
+
+        <div class="messages" id="messages" aria-live="polite" aria-label="Сообщения">
+          <div class="date-divider"><span>Сегодня</span></div>
+          <p class="empty-state" id="empty-state">Подключитесь со второй вкладки и отправьте сообщение.</p>
+        </div>
+
+        <div class="demo-notice" role="note">
+          <span aria-hidden="true">ⓘ</span>
+          <span>Тестовый режим: без авторизации, шифрования и сохранения истории.</span>
+        </div>
+        <form class="composer" id="message-form">
+          <label class="sr-only" for="message-input">Текст сообщения</label>
+          <input id="message-input" name="message" type="text" maxlength="1000" placeholder="Напишите сообщение…" autocomplete="off">
+          <button class="send-button" type="submit" aria-label="Отправить сообщение" disabled>
+            <span>Отправить</span><span aria-hidden="true">➤</span>
+          </button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
