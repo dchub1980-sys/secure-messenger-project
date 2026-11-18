@@ -25,10 +25,50 @@ class ConnectionManager:
         self.public_keys: dict[WebSocket, str] = {}
         self.broadcast_lock = asyncio.Lock()
 
-    async def connect(self, websocket: WebSocket, username: str) -> None:
-        await websocket.accept()
-        self.active_connections.append(websocket)
-        self.connection_info[websocket] = {"username": username, "client_id": uuid4().hex}
+    async def connect(self, websocket: WebSocket, username: str) -> bool:
+        async with self.broadcast_lock:
+            await websocket.accept()
+            if len(self.active_connections) >= 2:
+                await websocket.close(code=1008, reason="Чат уже занят")
+                return False
+
+            self.active_connections.append(websocket)
+            self.connection_info[websocket] = {"username": username, "client_id": uuid4().hex}
+            return True
+
+    async def announce_peer(self, websocket: WebSocket) -> None:
+        async with self.broadcast_lock:
+            info = self.connection_info.get(websocket)
+            if info is None:
+                return
+
+            peers = [
+                (connection, self.connection_info[connection])
+                for connection in self.active_connections
+                if connection is not websocket and connection in self.connection_info
+            ]
+            stale_connections = []
+            for connection, peer_info in peers:
+                try:
+                    await websocket.send_json({
+                        "type": "peer",
+                        "client_id": peer_info["client_id"],
+                        "username": peer_info["username"],
+                    })
+                except (OSError, RuntimeError):
+                    stale_connections.append(websocket)
+
+                try:
+                    await connection.send_json({
+                        "type": "peer",
+                        "client_id": info["client_id"],
+                        "username": info["username"],
+                    })
+                except (OSError, RuntimeError):
+                    stale_connections.append(connection)
+
+            for connection in stale_connections:
+                self.disconnect(connection)
 
     def disconnect(self, websocket: WebSocket) -> None:
         if websocket in self.active_connections:
@@ -105,8 +145,10 @@ async def chat_websocket(
     username: str = Query(default="Гость"),
 ) -> None:
     username = username.strip()[:32] or "Гость"
-    await manager.connect(websocket, username)
+    if not await manager.connect(websocket, username):
+        return
     await manager.broadcast({"type": "system", "text": f"{username} подключился"})
+    await manager.announce_peer(websocket)
 
     try:
         while True:

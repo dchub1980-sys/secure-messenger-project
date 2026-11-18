@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f5f7fb">
     <title>Мессенджер — прототип</title>
-    <link rel="stylesheet" href="/static/style.css?v=2">
+    <link rel="stylesheet" href="/static/style.css?v=5">
     <script src="/static/js/crypto.js?v=2" defer></script>
-    <script src="/static/js/chat.js?v=2" defer></script>
+    <script src="/static/js/chat.js?v=4" defer></script>
   </head>
   <body>
     <main class="app-shell">
@@ -27,9 +27,9 @@
         </label>
 
         <button class="chat-preview active" type="button" aria-current="page">
-          <span class="avatar avatar-blue" aria-hidden="true">РГ</span>
+          <span class="avatar avatar-blue chat-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20.5 11.5a8 8 0 0 1-8 8H7l-3.5 2 1-4.4A8 8 0 1 1 20.5 11.5Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/></svg></span>
           <span class="chat-preview-copy">
-            <span class="chat-preview-top"><strong>Рабочая группа</strong><time>10:41</time></span>
+            <span class="chat-preview-top"><strong id="chat-preview-title">Ожидание собеседника</strong><time>10:41</time></span>
             <span class="chat-preview-bottom"><span>Общий тестовый чат</span><span class="unread-dot" aria-label="Непрочитанное"></span></span>
           </span>
         </button>
@@ -42,13 +42,13 @@
         </div>
       </aside>
 
-      <section class="conversation" aria-label="Переписка Рабочая группа">
+      <section class="conversation" aria-label="Переписка">
         <header class="conversation-header">
           <div class="conversation-person">
-            <span class="avatar avatar-blue" aria-hidden="true">РГ</span>
-            <div><h2>Рабочая группа</h2><p><span class="status-dot" id="connection-dot"></span><span id="connection-status">Подключение…</span></p></div>
+            <span class="avatar avatar-blue chat-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20.5 11.5a8 8 0 0 1-8 8H7l-3.5 2 1-4.4A8 8 0 1 1 20.5 11.5Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/></svg></span>
+            <div><h2 id="chat-title">Ожидание собеседника</h2><p><span class="status-dot" id="connection-dot"></span><span id="connection-status">Подключение…</span></p></div>
           </div>
-          <span class="demo-label">WebSocket</span>
+
         </header>
 
         <section class="key-panel" aria-label="Согласование ключа ECDH">
@@ -57,7 +57,7 @@
             <div><strong>Ваш SHA-256 fingerprint</strong><code id="local-fingerprint">Генерируется…</code></div>
             <div><strong>Fingerprint собеседника</strong><code id="peer-fingerprint">Ожидание публичного ключа…</code></div>
           </div>
-          <p>Сверьте fingerprint собеседника по независимому каналу. Без сверки ECDH не защищает от MITM; соединение не аутентифицировано.</p>
+
         </section>
 
         <div class="messages" id="messages" aria-live="polite" aria-label="Сообщения">
